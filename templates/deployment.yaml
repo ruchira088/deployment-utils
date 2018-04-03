@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ NAME }}-deployment
+spec:
+  replicas: {{ REPLICA_COUNT }}
+  template:
+    metadata:
+      labels:
+        app: {{ NAME }}
+    spec:
+      containers:
+        - name: {{ NAME }}-container
+          image: {{ DOCKER_IMAGE }}
+          ports:
+            - containerPort: {{ CONTAINER_PORT }}

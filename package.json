@@ -1,0 +1,13 @@
+{
+  "name": "deployment-utils",
+  "version": "0.0.1",
+  "main": "app/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "aws-sdk": "^2.219.1",
+    "mustache": "^2.3.0"
+  }
+}
