@@ -22,4 +22,4 @@ const parseArgs = args =>
 
     },  { output: {} }).output
 
-console.log(parseArgs(["hello=cats", "foo=bar", "--name", "john"]))
+module.exports = { parseArgs }
