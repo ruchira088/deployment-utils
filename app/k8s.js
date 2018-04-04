@@ -3,7 +3,7 @@ const R = require("ramda")
 const fs = require("fs")
 const path = require("path")
 const util = require("util")
-const { DEFAULT_ENCODING, K8S_TEMPLATES, DEFAULT_REPLICA_COUNT } = require("./constants")
+const { DEFAULT_ENCODING, K8S_TEMPLATES, DEFAULT_REPLICA_COUNT, ENV_VARIABLE_PREFIX } = require("./constants")
 
 const getTemplatePath = templateName => path.resolve(__dirname, "../templates", `${templateName}.yaml`)
 
@@ -37,10 +37,31 @@ const missingKeys = (variables, view) =>
 
 const validateView = (requiredProps, view) => R.all(key => Object.keys(view).includes(key), requiredProps)
 
+const extractEnvValues =
+        config => Object.keys(config)
+            .filter(key => key.startsWith(ENV_VARIABLE_PREFIX))
+            .reduce((object, key) =>
+                Object.assign({}, object, { [key.substring(ENV_VARIABLE_PREFIX.length)]: config[key] }),
+                {}
+            )
+
+const transformConfigValues =
+    config => {
+        const envObject = extractEnvValues(config)
+        const envValues = Object.keys(envObject).map(key => ({ key, value: envObject[key] }))
+
+        return Object.keys(config)
+                .filter(key => !key.startsWith(ENV_VARIABLE_PREFIX))
+                .reduce((object, key) => Object.assign({}, object, { [key]: config[key] }), { envValues })
+    }
+
 const k8sConfig = async configs => {
     const renderedTemplates = await Promise.all(
         K8S_TEMPLATES.map(templateName =>
-            renderTemplate(templateName, Object.assign({}, { replicaCount: DEFAULT_REPLICA_COUNT }, configs))
+            renderTemplate(
+                templateName,
+                Object.assign({}, { replicaCount: DEFAULT_REPLICA_COUNT }, transformConfigValues(configs))
+            )
         )
     )
 
@@ -48,5 +69,6 @@ const k8sConfig = async configs => {
 }
 
 module.exports = {
-    k8sConfig
+    k8sConfig,
+    extractEnvValues
 }

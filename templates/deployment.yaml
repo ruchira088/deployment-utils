@@ -15,5 +15,8 @@ spec:
       containers:
         - name: {{ name }}-container
           image: {{ dockerImage }}
+          envFrom:
+            - configMapRef:
+                name: {{ name }}-config-map
           ports:
             - containerPort: {{ containerPort }}
