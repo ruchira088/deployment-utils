@@ -8,8 +8,7 @@ describe("k8s.js", () => {
                 name: "sample-name",
                 containerPort: "123",
                 dockerImage: "sample-image",
-                host: "example.ruchij.com",
-                replicaCount: "1",
+                host: "example.ruchij.com"
             })
                 .then(() => done())
                 .catch(errorMessage => done(new Error(errorMessage)))
@@ -22,7 +21,7 @@ describe("k8s.js", () => {
                 .then(() => done(new Error("k8sConfig did NOT reject the promise.")))
                 .catch(error => {
 
-                    ["replicaCount", "containerPort", "dockerImage"]
+                    ["containerPort", "dockerImage"]
                         .forEach(key => {
                             assert.include(error, key)
                         })

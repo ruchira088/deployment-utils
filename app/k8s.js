@@ -3,7 +3,7 @@ const R = require("ramda")
 const fs = require("fs")
 const path = require("path")
 const util = require("util")
-const { DEFAULT_ENCODING, K8S_TEMPLATES } = require("./constants")
+const { DEFAULT_ENCODING, K8S_TEMPLATES, DEFAULT_REPLICA_COUNT } = require("./constants")
 
 const getTemplatePath = templateName => path.resolve(__dirname, "../templates", `${templateName}.yaml`)
 
@@ -39,7 +39,9 @@ const validateView = (requiredProps, view) => R.all(key => Object.keys(view).inc
 
 const k8sConfig = async configs => {
     const renderedTemplates = await Promise.all(
-        K8S_TEMPLATES.map(templateName => renderTemplate(templateName, configs))
+        K8S_TEMPLATES.map(templateName =>
+            renderTemplate(templateName, Object.assign({}, { replicaCount: DEFAULT_REPLICA_COUNT }, configs))
+        )
     )
 
     return renderedTemplates.join("\n---\n")
