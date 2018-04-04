@@ -21,7 +21,7 @@ describe("k8s.js", () => {
                 .then(() => done(new Error("k8sConfig did NOT reject the promise.")))
                 .catch(error => {
 
-                    ["containerPort", "dockerImage"]
+                    ["containerPort"]
                         .forEach(key => {
                             assert.include(error, key)
                         })
