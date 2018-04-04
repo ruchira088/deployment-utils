@@ -5,7 +5,7 @@ const { parseArgs } = require("../app/index")
 describe("index.js", () => {
     describe("parseArgs", () => {
         it("should return the expected object", () => {
-            const testConfigs = [
+            const testValues = [
                 { input: ["name=john"], expectedOutput: { name: "john" } },
                 { input: ["name=jane", "--foo", "bar"], expectedOutput: { name: "jane", foo: "bar" } },
                 { input: ["--name", "jane", "hello=world"], expectedOutput: { name: "jane", hello: "world" } },
@@ -14,7 +14,7 @@ describe("index.js", () => {
                 { input: ["name=jane", "name=john"], expectedOutput: { name: "john" } }
             ]
 
-            testConfigs.forEach(({ input, expectedOutput }) => {
+            testValues.forEach(({ input, expectedOutput }) => {
                 assert.deepEqual(parseArgs(input), expectedOutput)
             })
         })

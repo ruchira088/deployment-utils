@@ -1,7 +1,6 @@
 const mustache = require("mustache")
 const fs = require("fs")
-
-const KEY_PREFIX = "--"
+const { KEY_PREFIX } = require("./constants")
 
 const [,, ...args] = process.argv
 
