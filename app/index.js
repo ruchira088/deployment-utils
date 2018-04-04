@@ -1,8 +1,4 @@
-const mustache = require("mustache")
-const fs = require("fs")
 const { KEY_PREFIX } = require("./constants")
-
-const [,, ...args] = process.argv
 
 const parseArgs = args =>
     args.reduce(({ output, object = {} }, arg) => {
@@ -20,5 +16,14 @@ const parseArgs = args =>
         }
 
     },  { output: {} }).output
+
+
+const cli = config => {
+    console.log(config)
+}
+
+const [,, ...args] = process.argv
+
+cli(parseArgs(args))
 
 module.exports = { parseArgs }

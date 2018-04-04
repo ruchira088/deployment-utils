@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ NAME }}-deployment
+  name: {{ name }}-deployment
 spec:
-  replicas: {{ REPLICA_COUNT }}
+  replicas: {{ replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ NAME }}
+        app: {{ name }}
     spec:
       containers:
-        - name: {{ NAME }}-container
-          image: {{ DOCKER_IMAGE }}
+        - name: {{ name }}-container
+          image: {{ dockerImage }}
           ports:
-            - containerPort: {{ CONTAINER_PORT }}
+            - containerPort: {{ containerPort }}
