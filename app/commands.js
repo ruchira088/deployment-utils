@@ -1,18 +1,22 @@
+const fs = require("fs")
+const util = require("util")
+const path = require("path")
 const { k8sConfig } = require("./k8s")
 const { getLatestDockerImageVersionTag } = require("./aws")
-const { KEY_PREFIX } = require("./constants")
+const { KEY_PREFIX, DEFAULT_K8S_OUTPUT_FILE, DEFAULT_ENCODING, DEFAULT_VERSION_FILE } = require("./constants")
 const { name, version } = require("../package")
 
 const commands = [
     {
         commandName: "k8s-config",
-        fn: k8sConfig
+        fn: ({ output = DEFAULT_K8S_OUTPUT_FILE, ...config }) =>
+                k8sConfig(config).then(writeToOutputFile(output))
     },
     {
         commandName: "docker-image-version-tag",
-        fn: ({ repositoryName }) => {
+        fn: ({ output = DEFAULT_VERSION_FILE, repositoryName }) => {
             if (repositoryName !== undefined) {
-                return getLatestDockerImageVersionTag(repositoryName)
+                return getLatestDockerImageVersionTag(repositoryName).then(writeToOutputFile(output))
             } else {
                 return Promise.reject("\"repositoryName\" is required to be passed via the CLI.")
             }
@@ -23,6 +27,11 @@ const commands = [
         fn: () => Promise.resolve({ name, version })
     }
 ]
+
+const writeToOutputFile =
+    fileName => text =>
+        util.promisify(fs.writeFile)(path.resolve(__dirname, "../output", fileName), text, DEFAULT_ENCODING)
+            .then(() => "Success")
 
 const parseArgs = args =>
     args.reduce(({ output, object = {} }, arg) => {

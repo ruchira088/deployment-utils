@@ -4,5 +4,7 @@ module.exports = {
 	ENV_REGION: "REGION",
 	DEFAULT_ENCODING: "utf-8",
 	VERSION_TAG_PREFIX: "v",
-    K8S_TEMPLATES: ["deployment", "service"]
+    K8S_TEMPLATES: ["deployment", "service"],
+	DEFAULT_VERSION_FILE: "docker-version.txt",
+	DEFAULT_K8S_OUTPUT_FILE: "k8s-config.yaml"
 }
