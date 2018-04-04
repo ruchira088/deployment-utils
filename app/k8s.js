@@ -35,7 +35,7 @@ const templateVariables = async templateName => {
 const missingKeys = (variables, view) =>
     Promise.reject(`Missing keys from the view: ${R.difference(variables, Object.keys(view)).join(", ")}`)
 
-const validateView = (keys, view) => R.all(key => Object.keys(view).includes(key), keys)
+const validateView = (requiredProps, view) => R.all(key => Object.keys(view).includes(key), requiredProps)
 
 const k8sConfig = async configs => {
     const renderedTemplates = await Promise.all(
