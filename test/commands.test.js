@@ -1,8 +1,8 @@
 const { assert } = require("chai")
 
-const { parseArgs } = require("../app/index")
+const { parseArgs } = require("../app/commands")
 
-describe("index.js", () => {
+describe("commands.js", () => {
     describe("parseArgs", () => {
         it("should return the expected object", () => {
             const testValues = [
