@@ -1,6 +1,7 @@
 const { k8sConfig } = require("./k8s")
 const { getLatestDockerImageVersionTag } = require("./aws")
 const { KEY_PREFIX } = require("./constants")
+const { name, version } = require("../package")
 
 const commands = [
     {
@@ -16,6 +17,10 @@ const commands = [
                 return Promise.reject("\"repositoryName\" is required to be passed via the CLI.")
             }
         }
+    },
+    {
+        commandName: "version",
+        fn: () => Promise.resolve({ name, version })
     }
 ]
 
