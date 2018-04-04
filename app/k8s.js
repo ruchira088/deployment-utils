@@ -3,7 +3,7 @@ const R = require("ramda")
 const fs = require("fs")
 const path = require("path")
 const util = require("util")
-const { DEFAULT_ENCODING } = require("./constants")
+const { DEFAULT_ENCODING, K8S_TEMPLATES } = require("./constants")
 
 const getTemplatePath = templateName => path.resolve(__dirname, "../templates", `${templateName}.yaml`)
 
@@ -37,6 +37,14 @@ const missingKeys = (variables, view) =>
 
 const validateView = (keys, view) => R.all(key => keys.includes(key), Object.keys(view))
 
-renderTemplate("service", { name: "john", containerPort: 80 })
-    .then(console.log)
-    .catch(console.error)
+const k8sConfig = async configs => {
+    const renderedTemplates = await Promise.all(
+        K8S_TEMPLATES.map(templateName => renderTemplate(templateName, configs))
+    )
+
+    return renderedTemplates.join("\n---\n")
+}
+
+module.exports = {
+    k8sConfig
+}
