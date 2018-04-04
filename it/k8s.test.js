@@ -8,6 +8,7 @@ describe("k8s.js", () => {
                 name: "sample-name",
                 containerPort: "123",
                 dockerImage: "sample-image",
+                host: "example.ruchij.com",
                 replicaCount: "1",
             })
                 .then(() => done())
