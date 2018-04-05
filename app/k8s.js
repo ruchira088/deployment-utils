@@ -3,7 +3,15 @@ const R = require("ramda")
 const fs = require("fs")
 const path = require("path")
 const util = require("util")
-const { DEFAULT_ENCODING, K8S_TEMPLATES, DEFAULT_REPLICA_COUNT, ENV_VARIABLE_PREFIX } = require("./constants")
+const {
+    DEFAULT_ENCODING,
+    K8S_TEMPLATES,
+    DEFAULT_REPLICA_COUNT,
+    ENV_VARIABLE_PREFIX,
+    SECRET_PREFIX
+} = require("./constants")
+
+const base64Encode = string => Buffer.from(string).toString("base64")
 
 const getTemplatePath = templateName => path.resolve(__dirname, "../templates", `${templateName}.yaml`)
 
@@ -37,22 +45,32 @@ const missingKeys = (variables, view) =>
 
 const validateView = (requiredProps, view) => R.all(key => Object.keys(view).includes(key), requiredProps)
 
-const extractEnvValues =
-        config => Object.keys(config)
-            .filter(key => key.startsWith(ENV_VARIABLE_PREFIX))
-            .reduce((object, key) =>
-                Object.assign({}, object, { [key.substring(ENV_VARIABLE_PREFIX.length)]: config[key] }),
-                {}
-            )
+const extractValues = prefix => config =>
+    Object.keys(config)
+        .filter(key => key.startsWith(prefix))
+        .reduce((object, key) =>
+                Object.assign({}, object, { [key.substring(prefix.length)]: config[key] }),
+            {}
+        )
+
+const extractEnvValues = extractValues(ENV_VARIABLE_PREFIX)
+
+const extractSecrets = extractValues(SECRET_PREFIX)
+
+const transformKeyValueObject =
+    (object, fn = value => value) => Object.keys(object).map(key => ({ key, value: fn(object[key]) }))
 
 const transformConfigValues =
     config => {
-        const envObject = extractEnvValues(config)
-        const envValues = Object.keys(envObject).map(key => ({ key, value: envObject[key] }))
+        const secrets = transformKeyValueObject(extractSecrets(config), base64Encode)
+        const envValues = transformKeyValueObject(extractEnvValues(config))
 
         return Object.keys(config)
-                .filter(key => !key.startsWith(ENV_VARIABLE_PREFIX))
-                .reduce((object, key) => Object.assign({}, object, { [key]: config[key] }), { envValues })
+                .filter(key => !R.any(prefix => key.startsWith(prefix), [ENV_VARIABLE_PREFIX, SECRET_PREFIX]))
+                .reduce(
+                    (object, key) => Object.assign({}, object, { [key]: config[key] }),
+                    { envValues, secrets }
+                )
     }
 
 const k8sConfig = async configs => {
