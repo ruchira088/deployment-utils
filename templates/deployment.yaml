@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: {{ name }}-container
-          image: {{ dockerImage }}
+          image: {{{ dockerImage }}}
           envFrom:
             - configMapRef:
                 name: {{ name }}-config-map
