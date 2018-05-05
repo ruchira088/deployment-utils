@@ -33,7 +33,7 @@ pullDependencies() {
 
         echo "Cleared fetched packages"
     else
-        echo "Dependency bundle NOT found is $S3_DEPENDENCY_BUCKET"
+        echo "Dependency bundle NOT found in $S3_DEPENDENCY_BUCKET"
     fi
 }
 
@@ -47,8 +47,8 @@ uploadDependencies() {
     else
         echo "Packaging dependencies into $packagedFileName"
 
-    #    tar -czf $packagedFileFullPath .sbt .ivy2
-        tar -C $HOME -czf "$HOME/$packagedFileName" .temp-dep
+        tar -C $HOME -czf "$HOME/$packagedFileName" .sbt .ivy2
+#        tar -C $HOME -czf "$HOME/$packagedFileName" .temp-dep
 
         echo "Packaging COMPLETED"
 
