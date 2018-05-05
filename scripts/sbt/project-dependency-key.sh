@@ -4,8 +4,7 @@ md5Key() {
     echo `md5sum $1 | cut -c1-8`
 }
 
-if [ -n "$1" ]
-then
+if [ -n "$1" ]; then
     projectHome=$1
 else
     projectHome=$PWD
