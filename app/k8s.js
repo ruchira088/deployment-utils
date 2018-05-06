@@ -35,7 +35,7 @@ const templateVariables = async templateName => {
 
     return R.uniq(
         mustache.parse(contents)
-            .filter(values => R.head(values) === "name")
+            .filter(values => ["name", "&"].includes(R.head(values)))
             .map(([, name]) => name)
     )
 }
