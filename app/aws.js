@@ -1,9 +1,9 @@
 const AWS = require("aws-sdk")
 const R = require("ramda")
 const { getEnvValueWithDefault } = require("./utils")
-const { DEFAULT_REGION, ENV_REGION, VERSION_TAG_PREFIX } = require("./constants")
+const { defaults, env, prefixes } = require("./constants")
 
-const ecr = new AWS.ECR({ region: getEnvValueWithDefault(ENV_REGION, DEFAULT_REGION) })
+const ecr = new AWS.ECR({ region: getEnvValueWithDefault(env.REGION, defaults.REGION) })
 
 const getHighestVersionTag =
     tags =>
@@ -11,8 +11,8 @@ const getHighestVersionTag =
             R.sortBy(
                 version => version,
                 tags
-                    .filter(tag => tag.startsWith(VERSION_TAG_PREFIX))
-                    .map(R.compose(Number, tag => tag.substring(VERSION_TAG_PREFIX.length)))
+                    .filter(tag => tag.startsWith(prefixes.VERSION_TAG))
+                    .map(R.compose(Number, tag => tag.substring(prefixes.VERSION_TAG.length)))
             )
         )
 

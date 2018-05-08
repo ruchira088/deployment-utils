@@ -3,18 +3,18 @@ const util = require("util")
 const path = require("path")
 const { k8sConfig } = require("./k8s")
 const { getLatestDockerImageVersionTag } = require("./aws")
-const { KEY_PREFIX, DEFAULT_K8S_OUTPUT_FILE, DEFAULT_ENCODING, DEFAULT_VERSION_FILE } = require("./constants")
+const { defaults, prefixes, config } = require("./constants")
 const { name, version } = require("../package")
 
 const commands = [
     {
         commandName: "k8s-config",
-        fn: ({ output = DEFAULT_K8S_OUTPUT_FILE, ...config }) =>
+        fn: ({ output = defaults.K8S_OUTPUT_FILE, ...config }) =>
                 k8sConfig(config).then(writeToOutputFile(output))
     },
     {
         commandName: "docker-image-version-tag",
-        fn: ({ output = DEFAULT_VERSION_FILE, repositoryName }) => {
+        fn: ({ output = defaults.DOCKER_VERSION_FILE, repositoryName }) => {
             if (repositoryName !== undefined) {
                 return getLatestDockerImageVersionTag(repositoryName).then(writeToOutputFile(output))
             } else {
@@ -30,7 +30,7 @@ const commands = [
 
 const writeToOutputFile =
     fileName => text =>
-        util.promisify(fs.writeFile)(path.resolve(__dirname, "../output", fileName), text, DEFAULT_ENCODING)
+        util.promisify(fs.writeFile)(path.resolve(__dirname, "../output", fileName), text, config.ENCODING)
             .then(() => "Success")
 
 const parseArgs = args =>
@@ -39,10 +39,10 @@ const parseArgs = args =>
 
         if (value != null) {
             return { output: Object.assign({}, output, { [key]: value }) }
-        } else if (arg.startsWith(KEY_PREFIX)) {
+        } else if (arg.startsWith(prefixes.KEY)) {
             return {
                 output,
-                object: { key: arg.substring(KEY_PREFIX.length) }
+                object: { key: arg.substring(prefixes.KEY.length) }
             }
         } else {
             return { output: Object.assign({}, output, { [object.key]: arg }) }
