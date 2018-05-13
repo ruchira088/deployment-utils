@@ -8,7 +8,7 @@ apiVersion: v1
 kind: Pod
 spec:
     containers:
-        - name: nodeJS
+        - name: nodejs
           image: node
           tty: true
 """
@@ -18,7 +18,7 @@ spec:
     stages {
         stage("Tests with coverage") {
             steps {
-                container("nodeJS") {
+                container("nodejs") {
                     sh """
                         node -v
                     """
