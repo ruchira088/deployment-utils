@@ -2,10 +2,13 @@ FROM node
 
 WORKDIR /opt/deployment-utils
 
-COPY . .
+COPY ./package.json .
+COPY ./yarn.lock .
 
 RUN yarn install
 
-ENTRYPOINT ["yarn", "start"]
+COPY . .
 
-CMD ["command=version"]
+ENTRYPOINT ["npm", "run"]
+
+CMD ["start", "command=version"]
