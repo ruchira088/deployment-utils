@@ -1,28 +1,43 @@
-pipeline {
-    agent {
-        kubernetes {
-            label "jenkins-pod"
-            defaultContainer "jnlp"
-            yaml """
-apiVersion: v1
-kind: Pod
-spec:
-    containers:
-        - name: nodejs
-          image: node
-          tty: true
-"""
-        }
-    }
+def podLabel = "jenkins-pod-${UUID.randomUUID().toString()}"
 
-    stages {
-        stage("Tests with coverage") {
-            steps {
-                container("nodejs") {
-                    sh """
-                        node -v
-                    """
-                }
+podTemplate(
+    label: podLabel,
+    containers: [
+        containerTemplate(
+            name: "docker",
+            image: "docker",
+            ttyEnabled: true,
+            command: "cat"
+        ),
+        containerTemplate(
+            name: "nodejs",
+            image: "node",
+            ttyEnabled: true
+        )
+    ],
+    volumes: [
+        hostPathVolume(
+            hostPath: "/var/run/docker.sock",
+            mountPath: "/var/run/docker.sock"
+        )
+    ]
+) {
+    node(podLabel) {
+        stage("Running tests (with coverage ?)") {
+
+            checkout scm
+
+            container("nodejs") {
+                sh """
+                    yarn install && \
+                    npm test
+                """
+            }
+        }
+
+        stage("Build Docker image") {
+            container("docker") {
+                sh "docker build -t deployment-utils ."
             }
         }
     }
