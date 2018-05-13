@@ -24,7 +24,9 @@ podTemplate(
 ) {
     node(podLabel) {
         stage("Running tests (with coverage ?)") {
+
             checkout scm
+
             container("nodejs") {
                 sh """
                     yarn install && \
@@ -34,7 +36,6 @@ podTemplate(
         }
 
         stage("Build Docker image") {
-            sh "ls"
             container("docker") {
                 sh "docker build -t deployment-utils ."
             }
