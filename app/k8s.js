@@ -4,18 +4,17 @@ const fs = require("fs")
 const path = require("path")
 const util = require("util")
 const {
-    DEFAULT_ENCODING,
-    K8S_TEMPLATES,
-    DEFAULT_REPLICA_COUNT,
-    ENV_VARIABLE_PREFIX,
-    SECRET_PREFIX
+    defaults,
+    config,
+    prefixes,
+    K8S_TEMPLATES
 } = require("./constants")
 
 const base64Encode = string => Buffer.from(string).toString("base64")
 
 const getTemplatePath = templateName => path.resolve(__dirname, "../templates", `${templateName}.yaml`)
 
-const readFile = path => util.promisify(fs.readFile)(path, DEFAULT_ENCODING)
+const readFile = path => util.promisify(fs.readFile)(path, config.ENCODING)
 
 const getTemplate = templateName => readFile(getTemplatePath(templateName))
 
@@ -53,9 +52,9 @@ const extractValues = prefix => config =>
             {}
         )
 
-const extractEnvValues = extractValues(ENV_VARIABLE_PREFIX)
+const extractEnvValues = extractValues(prefixes.ENV_VARIABLE)
 
-const extractSecrets = extractValues(SECRET_PREFIX)
+const extractSecrets = extractValues(prefixes.SECRET)
 
 const transformKeyValueObject =
     (object, fn = value => value) => Object.keys(object).map(key => ({ key, value: fn(object[key]) }))
@@ -66,7 +65,7 @@ const transformConfigValues =
         const envValues = transformKeyValueObject(extractEnvValues(config))
 
         return Object.keys(config)
-                .filter(key => !R.any(prefix => key.startsWith(prefix), [ENV_VARIABLE_PREFIX, SECRET_PREFIX]))
+                .filter(key => !R.any(prefix => key.startsWith(prefix), [prefixes.ENV_VARIABLE, prefixes.SECRET]))
                 .reduce(
                     (object, key) => Object.assign({}, object, { [key]: config[key] }),
                     { envValues, secrets }
@@ -78,7 +77,7 @@ const k8sConfig = async configs => {
         K8S_TEMPLATES.map(templateName =>
             renderTemplate(
                 templateName,
-                Object.assign({}, { replicaCount: DEFAULT_REPLICA_COUNT }, transformConfigValues(configs))
+                Object.assign({}, { replicaCount: defaults.REPLICA_COUNT }, transformConfigValues(configs))
             )
         )
     )
