@@ -34,7 +34,7 @@ const verifyRequiredEnvValues = (...args) =>
 // app.use((request, response, next) =>
 //     Promise.all([getEnvValue(env.SECRET_BEARER_TOKEN), getAuthValues(request)])
 //         .then(([ secretBearerToken, { type, token }]) => {
-//             if (type === config.authorizationType && token === secretBearerToken) {
+//             if (type === config.AUTHORIZATION_TYPE && token === secretBearerToken) {
 //                 next()
 //             } else {
 //                 response.status(httpStatusCodes.UNAUTHORIZED).json({})

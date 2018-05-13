@@ -7,13 +7,12 @@ module.exports = {
 		SECRET: "SECRET_"
 	},
 	config: {
-    	encoding: "utf-8",
-		authorizationType: "Bearer"
+    	ENCODING: "utf-8",
+		AUTHORIZATION_TYPE: "Bearer"
 	},
 	defaults: {
 		HTTP_PORT: 8000,
 		REGION: "ap-southeast-2",
-		ENCODING: "utf-8",
         REPLICA_COUNT: 1,
 		DOCKER_VERSION_FILE: "docker-version.txt",
         K8S_OUTPUT_FILE: "k8s-config.yaml"
