@@ -24,7 +24,7 @@ const auth = secretBearerToken => (request, response, next) =>
             }
         })
         .catch(error => {
-            response.status(httpStatusCodes.UNAUTHORIZED).json({ error: error.message })
+            response.status(httpStatusCodes.UNAUTHORIZED).json({ error })
         })
 
 module.exports = {

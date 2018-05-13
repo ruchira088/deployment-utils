@@ -1,12 +1,13 @@
 {
   "name": "deployment-utils",
   "version": "0.0.1",
-  "main": "app/index.js",
+  "main": "app/server/server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node .",
+    "cli": "node app/index.js",
+    "debug-server": "node --inspect=0.0.0.0:9222 .",
     "test": "mocha --recursive it test",
-    "server": "node app/server/server.js"
+    "server": "node ."
   },
   "dependencies": {
     "aws-sdk": "^2.219.1",

@@ -51,7 +51,8 @@ const parseArgs = args =>
     },  { output: {} }).output
 
 
-const cli = ({ command: name, ...args }) => {
+const cli = ({ command: name = "", ...args }) => {
+
     const command = commands.find(({ commandName }) => commandName.toLowerCase() === name.toLowerCase())
 
     if (command !== undefined) {

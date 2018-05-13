@@ -16,7 +16,7 @@ const createApp = secretBearerToken =>
     const app = express()
     const authenticatedRoute = auth(secretBearerToken)
 
-    app.get("/info", (request, response) => response.json({ name, version }))
+    app.get("/info", authenticatedRoute, (request, response) => response.json({ name, version }))
 
     app.use(bodyParser.json())
 
