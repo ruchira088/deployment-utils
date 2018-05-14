@@ -54,6 +54,8 @@ podTemplate(
                     yarn install && \
                     npm test && \
                     cat $HOME/envValues.txt
+                    ls -a $HOME
+                    ls -a $WORKSPACE
                 """
             }
         }
