@@ -35,8 +35,13 @@ podTemplate(
         stage("Apply CloudFormation template") {
             container("ubuntu") {
                 sh """
-                    ls
+                    apt-get update && apt-get install python-pip python-dev build-essential -y && \
+                    pip install awscli --upgrade --user && \
+                    ln -sf $HOME/.local/bin/aws /usr/local/bin
+
                     pwd
+
+                    ls
                 """
             }
         }
