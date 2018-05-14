@@ -39,9 +39,7 @@ podTemplate(
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
-                    pwd
-
-                    ls
+                    echo 'Hello World' >> $HOME/envValues.txt
                 """
             }
         }
@@ -54,7 +52,8 @@ podTemplate(
             container("nodejs") {
                 sh """
                     yarn install && \
-                    npm test
+                    npm test && \
+                    cat $HOME/envValues.txt
                 """
             }
         }
