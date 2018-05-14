@@ -37,7 +37,7 @@ podTemplate(
 
         stage("Build Docker image") {
             container("docker") {
-                sh "docker build -t deployment-utils ."
+                sh "env"
             }
         }
     }
