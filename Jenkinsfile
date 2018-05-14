@@ -6,12 +6,16 @@ podTemplate(
         containerTemplate(
             name: "docker",
             image: "docker",
-            ttyEnabled: true,
-            command: "cat"
+            ttyEnabled: true
         ),
         containerTemplate(
             name: "nodejs",
             image: "node",
+            ttyEnabled: true
+        ),
+        containerTemplate(
+            name: "ubuntu",
+            image: "ubuntu",
             ttyEnabled: true
         )
     ],
@@ -23,9 +27,24 @@ podTemplate(
     ]
 ) {
     node(podLabel) {
+
+        stage("Checkout source code") {
+            checkout scm
+        }
+
+        stage("Apply CloudFormation template") {
+            container("ubuntu") {
+                sh """
+                    ls
+                    pwd
+                """
+            }
+        }
+
+
         stage("Running tests (with coverage ?)") {
 
-            checkout scm
+
 
             container("nodejs") {
                 sh """
