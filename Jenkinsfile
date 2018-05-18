@@ -62,7 +62,7 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    dockerRepo=$JOB_NAME
+                    dockerRepo=$JOB_NAME | tr "/" "-")
                     echo \${dockerRepo}
                     docker images
                 """
