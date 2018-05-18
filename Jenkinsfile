@@ -47,8 +47,6 @@ podTemplate(
 
         stage("Running tests (with coverage ?)") {
 
-
-
             container("nodejs") {
                 sh """
                     yarn install && \
@@ -62,7 +60,11 @@ podTemplate(
 
         stage("Build Docker image") {
             container("docker") {
-                sh "env"
+                sh """
+                    dockerRepo=$(echo $JOB_NAME | tr / -)
+                    docker build -t "$dockerRepo-$RANDOM" .
+                    docker images
+                """
             }
         }
     }
