@@ -62,7 +62,7 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    DOCKER_REPO=$JOB_NAME
+                    DOCKER_REPO="Hello"
                     echo $DOCKER_REPO
                     docker build -t "$DOCKER_REPO-$RANDOM" .
                     docker images
