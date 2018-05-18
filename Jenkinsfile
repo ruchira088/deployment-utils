@@ -59,9 +59,10 @@ podTemplate(
         }
 
         stage("Build Docker image") {
+
             container("docker") {
                 sh """
-                    dockerRepo=$(echo $JOB_NAME | tr / -)
+                    dockerRepo=$JOB_NAME
                     docker build -t "$dockerRepo-$RANDOM" .
                     docker images
                 """
