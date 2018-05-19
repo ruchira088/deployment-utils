@@ -35,13 +35,16 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install curl wget unzip python-pip python-dev build-essential -y
+                    apt-get update && apt-get install curl wget jq unzip python-pip python-dev build-essential -y
 
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
                     aws s3 ls
-                    curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.k8s.ruchij.com
+                    response=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.k8s.ruchij.com`
+                    echo \$response | jq .AccessKeyId
+                    echo \$response | jq .SecretAccessKey
+
 
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
