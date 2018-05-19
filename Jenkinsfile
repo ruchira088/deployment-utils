@@ -10,8 +10,8 @@ podTemplate(
         ),
         containerTemplate(
             name: "nodejs",
-            image: "node",
             ttyEnabled: true
+            image: "node",
         ),
         containerTemplate(
             name: "ubuntu",
@@ -93,6 +93,7 @@ podTemplate(
 
             container("docker") {
                 sh """
+                    env
                     DOCKER_IMAGE_TAG=$JOB_NAME-\$RANDOM
                     docker build -t \$DOCKER_IMAGE_TAG .
                     docker images
