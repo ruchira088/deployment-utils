@@ -80,7 +80,7 @@ podTemplate(
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
-                    aws ecr get-login --no-include-email --region ap-southeast-2 | bash
+                    aws ecr get-login --no-include-email --region ap-southeast-2 | sh
 
                     cat dev-ops/terraform/docker-repository-url.txt
 
