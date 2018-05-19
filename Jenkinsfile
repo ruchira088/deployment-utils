@@ -41,10 +41,11 @@ podTemplate(
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
                     unzip -d Software Software/terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
 
-                    PROJECT_ROOT=$PWD
+                    ls Software
+                    pwd
                     cd dev-ops/terraform
 
-                    ./Sofware/terraform dev-ops/terraform init
+                    ../../Sofware/terraform init
 
                     cd \$PROJECT_ROOT
 
