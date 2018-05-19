@@ -41,8 +41,7 @@ podTemplate(
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
                     aws s3 ls
-
-                    curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ec2-admin-role
+                    curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.k8s.ruchij.com
 
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
