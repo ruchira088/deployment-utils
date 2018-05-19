@@ -84,9 +84,10 @@ podTemplate(
 
                     DOCKER_REPOSITORY_URL=`cat dev-ops/terraform/docker-repository-url.txt`
 
+                    echo \$DOCKER_REPOSITORY_URL
                     DOCKER_IMAGE_TAG=$JOB_NAME-$BUILD_NUMBER
                     docker build -t \$DOCKER_IMAGE_TAG .
-                    docker tag \$DOCKER_IMAGE_TAG:latest \$DOCKER_REPOSITORY_URL:$BUILD_NUMBER
+                    docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:$BUILD_NUMBER
                     docker push \$DOCKER_REPOSITORY_URL:$BUILD_NUMBER
                     docker images
                 """
