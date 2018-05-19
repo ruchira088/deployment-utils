@@ -35,17 +35,7 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install curl wget jq unzip python-pip python-dev build-essential -y
-
-                    pip install awscli --upgrade --user && \
-                    ln -sf $HOME/.local/bin/aws /usr/local/bin
-
-                    aws s3 ls
-
-                    response=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.k8s.ruchij.com`
-                    AWS_ACCESS_KEY_ID=`echo \$response | jq .AccessKeyId`
-                    AWS_SECRET_ACCESS_KEY=`echo \$response | jq .SecretAccessKey`
-                    AWS_DEFAULT_REGION="ap-southeast-2"
+                    apt-get update && apt-get install wget -y
 
 
                     mkdir Software && \
@@ -58,8 +48,8 @@ podTemplate(
                     export TF_LOG=1
 
                     \$PROJECT_ROOT/Software/terraform init
-                    \$PROJECT_ROOT/Software/terraform plan
-                    \$PROJECT_ROOT/Software/terraform apply -auto-approve
+                    \$PROJECT_ROOT/Software/terraform plan -var docker_repo_name=$JOB_NAME
+                    \$PROJECT_ROOT/Software/terraform apply -auto-approve -var docker_repo_name=$JOB_NAME
 
                     cd \$PROJECT_ROOT
                 """
