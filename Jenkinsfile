@@ -42,16 +42,12 @@ podTemplate(
                     unzip -d Software Software/terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
 
                     PROJECT_ROOT=`pwd`
-                    env
-                    ls Software
-                    echo $PWD
-                    echo \$PROJECT_ROOT
                     cd dev-ops/terraform
 
-                    ../../Software/terraform init
+                    \$PROJECT_ROOT/Software/terraform init
+                    \$PROJECT_ROOT/Software/terraform apply -auto-approve
 
                     cd \$PROJECT_ROOT
-
                 """
             }
         }
