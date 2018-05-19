@@ -35,7 +35,7 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install wget unzip -y
+                    apt-get update && apt-get install wget unzip jq -y
 
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
@@ -46,11 +46,16 @@ podTemplate(
 
                     sed -i "s/BACKEND_KEY/`echo $JOB_NAME | tr / -`/g" resources.tf
 
-                    \$PROJECT_ROOT/Software/terraform init
-                    \$PROJECT_ROOT/Software/terraform apply -auto-approve \
-                        -var docker_repo_name=$JOB_NAME
+                    terraform=\$PROJECT_ROOT/Software/terraform
 
-                    \$PROJECT_ROOT/Software/terraform show
+                    \$terraform init
+                    \$terraform apply -auto-approve \
+                        -var docker_repository_name=$JOB_NAME
+
+                    \$terraform show
+                    DOCKER_REPOSITORY_URL=`\$terraform output -json | jq .dockerRepositoryUrl.value`
+
+                    echo \$DOCKER_REPOSITORY_URL
 
                     cd \$PROJECT_ROOT
                 """
@@ -88,7 +93,8 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    docker build -t $JOB_NAME .
+                    DOCKER_IMAGE_TAG=$JOB_NAME-$RANDOM
+                    docker build -t \$DOCKER_IMAGE_TAG .
                     docker images
                 """
             }
