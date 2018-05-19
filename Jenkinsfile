@@ -82,10 +82,12 @@ podTemplate(
 
                     aws ecr get-login --no-include-email --region ap-southeast-2 | sh
 
-                    cat dev-ops/terraform/docker-repository-url.txt
+                    DOCKER_REPOSITORY_URL=`cat dev-ops/terraform/docker-repository-url.txt`
 
                     DOCKER_IMAGE_TAG=$JOB_NAME-$BUILD_NUMBER
                     docker build -t \$DOCKER_IMAGE_TAG .
+                    docker tag \$DOCKER_IMAGE_TAG:latest \$DOCKER_REPOSITORY_URL:$BUILD_NUMBER
+                    docker push \$DOCKER_REPOSITORY_URL:$BUILD_NUMBER
                     docker images
                 """
             }
