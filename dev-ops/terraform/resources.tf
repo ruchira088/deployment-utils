@@ -1,11 +1,9 @@
 variable "docker_repo_name" {}
 
-variable "backend_key" {}
-
 terraform {
     backend "s3" {
         bucket = "terraform.ruchij.com"
-        key = "${var.backend_key}"
+        key = "backends/BACKEND_KEY"
         region = "ap-southeast-2"
     }
 }

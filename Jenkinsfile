@@ -44,10 +44,11 @@ podTemplate(
                     PROJECT_ROOT=`pwd`
                     cd dev-ops/terraform
 
+                    sed -i "s/BACKEND_KEY/`echo $JOB_NAME | tr / -`/g" resources.tf
+
                     \$PROJECT_ROOT/Software/terraform init
                     \$PROJECT_ROOT/Software/terraform apply -auto-approve \
-                        -var docker_repo_name=$JOB_NAME \
-                        -var backend_key=$JOB_NAME
+                        -var docker_repo_name=$JOB_NAME
 
                     \$PROJECT_ROOT/Software/terraform show
 
