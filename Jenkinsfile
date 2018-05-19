@@ -43,6 +43,7 @@ podTemplate(
 
                     env
                     ls Software
+                    echo $PWD
                     pwd
                     cd dev-ops/terraform
 
