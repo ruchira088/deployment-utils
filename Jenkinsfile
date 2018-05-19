@@ -10,7 +10,7 @@ podTemplate(
         ),
         containerTemplate(
             name: "nodejs",
-            ttyEnabled: true
+            ttyEnabled: true,
             image: "node",
         ),
         containerTemplate(
