@@ -93,7 +93,7 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    DOCKER_IMAGE_TAG=$JOB_NAME-$RANDOM
+                    DOCKER_IMAGE_TAG=$JOB_NAME-\$RANDOM
                     docker build -t \$DOCKER_IMAGE_TAG .
                     docker images
                 """
