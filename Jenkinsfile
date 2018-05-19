@@ -37,7 +37,6 @@ podTemplate(
                 sh """
                     apt-get update && apt-get install wget unzip -y
 
-
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
                     unzip -d Software Software/terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
@@ -45,11 +44,11 @@ podTemplate(
                     PROJECT_ROOT=`pwd`
                     cd dev-ops/terraform
 
-                    export TF_LOG=1
-
                     \$PROJECT_ROOT/Software/terraform init
                     \$PROJECT_ROOT/Software/terraform plan -var docker_repo_name=$JOB_NAME
                     \$PROJECT_ROOT/Software/terraform apply -auto-approve -var docker_repo_name=$JOB_NAME
+
+                    \$PROJECT_ROOT/Software/terraform show
 
                     cd \$PROJECT_ROOT
                 """
