@@ -76,8 +76,7 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    apt-get update && apt-get install python-pip python-dev build-essential -y
-
+                    apk add -v  --update add python py-pip && \
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
