@@ -35,7 +35,7 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install wget unzip python-pip python-dev build-essential -y
+                    apt-get update && apt-get install curl wget unzip python-pip python-dev build-essential -y
 
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
