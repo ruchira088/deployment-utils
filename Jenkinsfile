@@ -55,6 +55,8 @@ podTemplate(
                     PROJECT_ROOT=`pwd`
                     cd dev-ops/terraform
 
+                    export TF_LOG=1
+
                     \$PROJECT_ROOT/Software/terraform init
                     \$PROJECT_ROOT/Software/terraform plan
                     \$PROJECT_ROOT/Software/terraform apply -auto-approve
