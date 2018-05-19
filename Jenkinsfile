@@ -35,7 +35,10 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install wget unzip -y
+                    apt-get update && apt-get install wget unzip python-pip python-dev build-essential -y
+
+                    pip install awscli --upgrade --user && \
+                    ln -sf $HOME/.local/bin/aws /usr/local/bin
 
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
@@ -45,6 +48,7 @@ podTemplate(
                     cd dev-ops/terraform
 
                     \$PROJECT_ROOT/Software/terraform init
+                    \$PROJECT_ROOT/Software/terraform plan
                     \$PROJECT_ROOT/Software/terraform apply -auto-approve
 
                     cd \$PROJECT_ROOT
