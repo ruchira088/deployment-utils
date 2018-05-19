@@ -35,7 +35,7 @@ podTemplate(
         stage("Apply Terraform") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install wget -y
+                    apt-get update && apt-get install wget unzip -y
 
 
                     mkdir Software && \
