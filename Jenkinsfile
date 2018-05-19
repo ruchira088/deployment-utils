@@ -67,10 +67,7 @@ podTemplate(
             container("nodejs") {
                 sh """
                     yarn install && \
-                    npm test && \
-                    cat $HOME/envValues.txt
-                    ls -a $HOME
-                    ls -a $WORKSPACE
+                    npm test
                 """
             }
         }
