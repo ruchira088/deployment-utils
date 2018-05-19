@@ -89,6 +89,7 @@ podTemplate(
                     docker build -t \$DOCKER_IMAGE_TAG .
                     docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
                     docker push `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
+                    docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:latest
                     docker push `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:latest
                     docker images
                 """
