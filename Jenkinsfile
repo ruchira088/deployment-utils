@@ -55,26 +55,12 @@ podTemplate(
                     \$terraform show
                     DOCKER_REPOSITORY_URL=`\$terraform output -json | jq .dockerRepositoryUrl.value`
 
-                    echo \$DOCKER_REPOSITORY_URL
+                    echo \$DOCKER_REPOSITORY_URL >> docker-repository-url.txt
 
                     cd \$PROJECT_ROOT
                 """
             }
         }
-
-        stage("Apply CloudFormation template") {
-            container("ubuntu") {
-                sh """
-                    apt-get update && apt-get install python-pip python-dev build-essential -y
-
-                    pip install awscli --upgrade --user && \
-                    ln -sf $HOME/.local/bin/aws /usr/local/bin
-
-                    echo 'Hello World' >> $HOME/envValues.txt
-                """
-            }
-        }
-
 
         stage("Running tests (with coverage ?)") {
 
@@ -93,8 +79,16 @@ podTemplate(
 
             container("docker") {
                 sh """
-                    env
-                    DOCKER_IMAGE_TAG=$JOB_NAME-\$RANDOM
+                    apt-get update && apt-get install python-pip python-dev build-essential -y
+
+                    pip install awscli --upgrade --user && \
+                    ln -sf $HOME/.local/bin/aws /usr/local/bin
+
+                    aws ecr get-login --no-include-email --region ap-southeast-2 | bash
+
+                    cat dev-ops/terraform/docker-repository-url.txt
+
+                    DOCKER_IMAGE_TAG=$JOB_NAME-$BUILD_NUMBER
                     docker build -t \$DOCKER_IMAGE_TAG .
                     docker images
                 """
