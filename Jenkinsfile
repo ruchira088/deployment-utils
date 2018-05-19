@@ -45,9 +45,9 @@ podTemplate(
                     cd dev-ops/terraform
 
                     \$PROJECT_ROOT/Software/terraform init
-                    \$PROJECT_ROOT/Software/terraform plan -var docker_repo_name=$JOB_NAME
-                    \$PROJECT_ROOT/Software/terraform refresh -var docker_repo_name=$JOB_NAME
-                    \$PROJECT_ROOT/Software/terraform apply -auto-approve -var docker_repo_name=$JOB_NAME
+                    \$PROJECT_ROOT/Software/terraform apply -auto-approve \
+                        -var docker_repo_name=$JOB_NAME \
+                        -var backend_key=$JOB_NAME
 
                     \$PROJECT_ROOT/Software/terraform show
 
