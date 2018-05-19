@@ -40,6 +40,8 @@ podTemplate(
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
+                    aws s3 ls
+
                     mkdir Software && \
                     wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
                     unzip -d Software Software/terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
