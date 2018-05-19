@@ -32,10 +32,31 @@ podTemplate(
             checkout scm
         }
 
+        stage("Apply Terraform") {
+            container("ubuntu") {
+                sh """
+                    apt-get update && apt-get install wget unzip -y
+
+                    mkdir Software && \
+                    wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
+                    unzip -d Software terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
+
+                    PROJECT_ROOT=$PWD
+                    cd dev-ops/terraform
+
+                    ./Sofware/terraform dev-ops/terraform init
+
+                    cd \$PROJECT_ROOT
+
+                """
+            }
+        }
+
         stage("Apply CloudFormation template") {
             container("ubuntu") {
                 sh """
-                    apt-get update && apt-get install python-pip python-dev build-essential -y && \
+                    apt-get update && apt-get install python-pip python-dev build-essential -y
+
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
