@@ -41,9 +41,11 @@ podTemplate(
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
                     aws s3 ls
+
                     response=`curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.k8s.ruchij.com`
-                    echo \$response | jq .AccessKeyId
-                    echo \$response | jq .SecretAccessKey
+                    AWS_ACCESS_KEY_ID=$(echo \$response | jq .AccessKeyId)
+                    AWS_SECRET_ACCESS_KEY=$(echo \$response | jq .SecretAccessKey)
+                    AWS_DEFAULT_REGION="ap-southeast-2"
 
 
                     mkdir Software && \
