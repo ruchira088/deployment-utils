@@ -6,7 +6,7 @@ ln -sf $HOME/.local/bin/aws /usr/local/bin
 
 aws ecr get-login --no-include-email --region ap-southeast-2 | sh
 
-DOCKER_REPOSITORY_URL=`cat dev-ops/terraform/docker-repository-url.txt`
+DOCKER_REPOSITORY_URL=`cat dev-ops/terraform/docker-repository-url.txt | tr -d '"'`
 GIT_COMMIT=`git rev-parse HEAD | cut -c1-8`
 
 echo "DOCKER_REPOSITORY_URL = $DOCKER_REPOSITORY_URL"
