@@ -18,7 +18,7 @@ docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:bu
 docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
 
 docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:\$GIT_COMMIT
-docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:$GIT_COMMIT
+docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:commit-$GIT_COMMIT
 
 docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:latest
 docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:latest
