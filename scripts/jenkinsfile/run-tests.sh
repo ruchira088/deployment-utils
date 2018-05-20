@@ -21,5 +21,5 @@ ln -sf $HOME/.local/bin/aws /usr/local/bin
 
 sbt testWithCoverage
 
-aws s3 cp -r target/test-results $ARTIFACTS_URL/$JOB_NAME
-aws s3 cp -r target/scala-2.12/scoverage-report $ARTIFACTS_URL/$JOB_NAME
+aws s3 cp --recursive target/test-results $ARTIFACTS_URL/$JOB_NAME/test-results
+aws s3 cp --recursive target/scala-2.12/scoverage-report $ARTIFACTS_URL/$JOB_NAME/coverage-report
