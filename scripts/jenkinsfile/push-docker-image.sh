@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 apk -v --update add python py-pip git && \
 pip install awscli --upgrade --user && \
