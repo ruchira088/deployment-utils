@@ -1,7 +1,7 @@
 yarn start \
     --command k8s-config \
     --name env-values \
-    --dockerImage env-values \
+    --dockerImage env-values-docker-image \
     --containerPort 80 \
     --host nginx.ruchij.com \
     --ENV_STAGE dev \

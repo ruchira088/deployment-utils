@@ -7,11 +7,9 @@ module.exports = {
 		SECRET: "SECRET_"
 	},
 	config: {
-    	ENCODING: "utf-8",
-		AUTHORIZATION_TYPE: "Bearer"
+    	ENCODING: "utf-8"
 	},
 	defaults: {
-		HTTP_PORT: 8000,
 		REGION: "ap-southeast-2",
         REPLICA_COUNT: 1,
 		DOCKER_VERSION_FILE: "docker-version.txt",
@@ -19,10 +17,6 @@ module.exports = {
 	},
 	env: {
 		HTTP_PORT: "HTTP_PORT",
-		REGION: "REGION",
-		SECRET_BEARER_TOKEN: "SECRET_BEARER_TOKEN"
-	},
-	headers: {
-		AUTHORIZATION: "authorization"
+		REGION: "REGION"
 	}
 }
