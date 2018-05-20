@@ -4,40 +4,25 @@ podTemplate(
     label: podLabel,
     containers: [
         containerTemplate(
-            name: "docker",
-            image: "docker",
-            ttyEnabled: true,
-            command: "cat"
-        ),
-        containerTemplate(
             name: "nodejs",
+            ttyEnabled: true,
             image: "node",
-            ttyEnabled: true
-        )
-    ],
-    volumes: [
-        hostPathVolume(
-            hostPath: "/var/run/docker.sock",
-            mountPath: "/var/run/docker.sock"
         )
     ]
 ) {
     node(podLabel) {
-        stage("Running tests (with coverage ?)") {
 
+        stage("Checkout source code") {
             checkout scm
+        }
+
+        stage("Running tests (with coverage ?)") {
 
             container("nodejs") {
                 sh """
                     yarn install && \
                     npm test
                 """
-            }
-        }
-
-        stage("Build Docker image") {
-            container("docker") {
-                sh "docker build -t deployment-utils ."
             }
         }
     }
