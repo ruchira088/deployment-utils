@@ -14,13 +14,16 @@ echo "DOCKER_REPOSITORY_URL = $DOCKER_REPOSITORY_URL"
 DOCKER_IMAGE_TAG=$JOB_NAME-$BUILD_NUMBER
 docker build -t $DOCKER_IMAGE_TAG -f dev-ops/Dockerfile .
 
-docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
-docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:jenkins-build-id-$BUILD_NUMBER
+dockerTags=(
+    "$DOCKER_REPOSITORY_URL:jenkins-build-id-$BUILD_NUMBER"
+    "$DOCKER_REPOSITORY_URL:commit-$GIT_COMMIT"
+    "$DOCKER_REPOSITORY_URL:latest"
+)
 
-docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:\$GIT_COMMIT
-docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:commit-$GIT_COMMIT
-
-docker tag $DOCKER_IMAGE_TAG:latest `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:latest
-docker push `echo $DOCKER_REPOSITORY_URL | tr -d '"'`:latest
+for dockerTag in "${dockerTags[@]}"
+do
+    docker tag $DOCKER_IMAGE_TAG:latest $dockerTag
+    docker push $dockerTag
+done
 
 docker images
