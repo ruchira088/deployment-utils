@@ -17,7 +17,7 @@ apt-get update && \
 apt-get install sbt -y
 
 pip install awscli --upgrade --user && \
-sudo ln -sf $HOME/.local/bin/aws /usr/local/bin
+ln -sf $HOME/.local/bin/aws /usr/local/bin
 
 sbt testWithCoverage
 
