@@ -1,5 +1,5 @@
 module.exports = {
-    K8S_TEMPLATES: ["deployment", "service", "ingress", "configMap", "secrets"],
+    K8S_TEMPLATES: ["deployment", "service", "ingress", "configMap", "secrets", "certificate"],
 	prefixes: {
 		KEY: "--",
 		VERSION_TAG: "v",

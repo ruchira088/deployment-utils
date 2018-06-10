@@ -18,14 +18,19 @@ const readFile = path => util.promisify(fs.readFile)(path, config.ENCODING)
 
 const getTemplate = templateName => readFile(getTemplatePath(templateName))
 
+const derivedViews = ({ host }) => ({ tlsSecretName: `${dotCaseToKebabCase(host)}-tls` })
+
+const dotCaseToKebabCase = string => string.replace(/\./g, "-")
+
 const renderTemplate = async (templateName, view) => {
     const variables = await templateVariables(templateName)
+    const completeView = Object.assign({}, derivedViews(view), view)
 
-    if (validateView(variables, view)) {
+    if (validateView(variables, completeView)) {
         const contents = await getTemplate(templateName)
-        return mustache.render(contents, view)
+        return mustache.render(contents, completeView)
     } else {
-        return missingKeys(variables, view)
+        return missingKeys(variables, completeView)
     }
 }
 
@@ -48,7 +53,7 @@ const extractValues = prefix => config =>
     Object.keys(config)
         .filter(key => key.startsWith(prefix))
         .reduce((object, key) =>
-                Object.assign({}, object, { [key.substring(prefix.length)]: config[key] }),
+            Object.assign({}, object, { [key.substring(prefix.length)]: config[key] }),
             {}
         )
 
