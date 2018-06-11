@@ -43,7 +43,10 @@ podTemplate(
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
-                    ls -a
+                    artifact_path="s3://jenkins-artifacts.ruchij.com/$JOB_NAME/Build-$BUILD_ID"
+
+                    aws s3 cp --recursive mochawesome-report \$artifact_path/test-report
+                    aws s3 cp --recursive coverage \$artifact_path/coverage-report
                 """
             }
         }

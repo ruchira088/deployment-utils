@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node .",
-    "test": "mocha --recursive it test",
+    "test": "mocha --reporter mochawesome --recursive it test",
     "testWithCoverage": "nyc npm test && nyc report --reporter=html"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.0.5",
+    "mochawesome": "^3.0.2",
     "nyc": "^12.0.2"
   }
 }
