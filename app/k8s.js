@@ -9,6 +9,7 @@ const {
     prefixes,
     K8S_TEMPLATES
 } = require("./constants")
+const { map, trimObject } = require("./utils")
 
 const base64Encode = string => Buffer.from(string).toString("base64")
 
@@ -18,13 +19,14 @@ const readFile = path => util.promisify(fs.readFile)(path, config.ENCODING)
 
 const getTemplate = templateName => readFile(getTemplatePath(templateName))
 
-const derivedViews = ({ host }) => ({ tlsSecretName: `${dotCaseToKebabCase(host)}-tls` })
+const derivedViews = ({ host }) =>
+    ({ tlsSecretName: map(value => `${dotCaseToKebabCase(value)}-tls`, host) })
 
 const dotCaseToKebabCase = string => string.replace(/\./g, "-")
 
 const renderTemplate = async (templateName, view) => {
     const variables = await templateVariables(templateName)
-    const completeView = Object.assign({}, derivedViews(view), view)
+    const completeView = Object.assign({}, trimObject(derivedViews(view)), view)
 
     if (validateView(variables, completeView)) {
         const contents = await getTemplate(templateName)

@@ -3,3 +3,5 @@ node_modules
 *.log
 output/*
 !output/.empty
+coverage
+.nyc_output
