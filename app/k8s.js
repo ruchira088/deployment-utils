@@ -78,7 +78,7 @@ const transformConfigValues =
     }
 
 const k8sConfig = async configs => {
-    const renderedTemplates = await Promise.all(
+    const [ ingress, ...k8s ] = await Promise.all(
         K8S_TEMPLATES.map(templateName =>
             renderTemplate(
                 templateName,
@@ -87,7 +87,7 @@ const k8sConfig = async configs => {
         )
     )
 
-    return renderedTemplates.join("\n---\n")
+    return { ingress, k8s: k8s.join("\n---\n") }
 }
 
 module.exports = {

@@ -9,8 +9,14 @@ const { name, version } = require("../package")
 const commands = [
     {
         commandName: "k8s-config",
-        fn: ({ output = defaults.K8S_OUTPUT_FILE, ...config }) =>
-                k8sConfig(config).then(writeToOutputFile(output))
+        fn: ({ k8sOutput = defaults.K8S_OUTPUT_FILE, ingressOutput = defaults.INGRESS_OUTPUT_FILE, ...config }) =>
+                k8sConfig(config)
+                    .then(({ k8s, ingress }) =>
+                        Promise.all([
+                            writeToOutputFile(k8sOutput)(k8s),
+                            writeToOutputFile(ingressOutput)(ingress)
+                        ])
+                    )
     },
     {
         commandName: "docker-image-version-tag",
