@@ -5,3 +5,4 @@ output/*
 !output/.empty
 coverage
 .nyc_output
+mochawesome-report
