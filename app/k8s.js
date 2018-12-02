@@ -9,6 +9,7 @@ const {
     prefixes,
     K8S_TEMPLATES
 } = require("./constants")
+const { map, trimObject } = require("./utils")
 
 const base64Encode = string => Buffer.from(string).toString("base64")
 
@@ -18,14 +19,20 @@ const readFile = path => util.promisify(fs.readFile)(path, config.ENCODING)
 
 const getTemplate = templateName => readFile(getTemplatePath(templateName))
 
+const derivedViews = ({ host }) =>
+    ({ tlsSecretName: map(value => `${dotCaseToKebabCase(value)}-tls`, host) })
+
+const dotCaseToKebabCase = string => string.replace(/\./g, "-")
+
 const renderTemplate = async (templateName, view) => {
     const variables = await templateVariables(templateName)
+    const completeView = Object.assign({}, trimObject(derivedViews(view)), view)
 
-    if (validateView(variables, view)) {
+    if (validateView(variables, completeView)) {
         const contents = await getTemplate(templateName)
-        return mustache.render(contents, view)
+        return mustache.render(contents, completeView)
     } else {
-        return missingKeys(variables, view)
+        return missingKeys(variables, completeView)
     }
 }
 
@@ -48,7 +55,7 @@ const extractValues = prefix => config =>
     Object.keys(config)
         .filter(key => key.startsWith(prefix))
         .reduce((object, key) =>
-                Object.assign({}, object, { [key.substring(prefix.length)]: config[key] }),
+            Object.assign({}, object, { [key.substring(prefix.length)]: config[key] }),
             {}
         )
 
@@ -73,7 +80,7 @@ const transformConfigValues =
     }
 
 const k8sConfig = async configs => {
-    const renderedTemplates = await Promise.all(
+    const [ ingress, ...k8s ] = await Promise.all(
         K8S_TEMPLATES.map(templateName =>
             renderTemplate(
                 templateName,
@@ -82,7 +89,7 @@ const k8sConfig = async configs => {
         )
     )
 
-    return renderedTemplates.join("\n---\n")
+    return { ingress, k8s: k8s.join("\n---\n") }
 }
 
 module.exports = {

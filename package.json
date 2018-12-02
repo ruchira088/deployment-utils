@@ -1,24 +1,22 @@
 {
   "name": "deployment-utils",
   "version": "0.0.1",
-  "main": "app/server/server.js",
+  "main": "app/index.js",
   "license": "MIT",
   "scripts": {
-    "cli": "node app/index.js",
-    "debug-server": "node --inspect=0.0.0.0:9222 .",
-    "test": "mocha --recursive it test",
-    "server": "node ."
+    "start": "node .",
+    "test": "mocha --reporter mochawesome --recursive it test",
+    "testWithCoverage": "nyc npm test && nyc report --reporter=html"
   },
   "dependencies": {
     "aws-sdk": "^2.219.1",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.3",
-    "http-status-codes": "^1.3.0",
     "mustache": "^2.3.0",
     "ramda": "^0.25.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^5.0.5"
+    "mocha": "^5.0.5",
+    "mochawesome": "^3.0.2",
+    "nyc": "^12.0.2"
   }
 }

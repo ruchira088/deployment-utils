@@ -5,6 +5,10 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
+  tls:
+    - secretName: {{ tlsSecretName }}
+      hosts:
+        - {{ host }}
   rules:
     - host: {{ host }}
       http:

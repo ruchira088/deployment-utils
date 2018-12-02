@@ -1,10 +1,9 @@
 yarn start \
     --command k8s-config \
-    --name env-values \
-    --dockerImage env-values \
+    --name nginx \
+    --dockerImage nginx \
     --containerPort 80 \
     --host nginx.ruchij.com \
-    --ENV_STAGE dev \
-    --ENV_MONGO_URI mongo://mongo.ruchij.com:27017 \
-    --SECRET_USERNAME admin \
-    --SECRET_PASSWORD password
+    --ENV_APPLICATION_MODE development \
+    --SECRET_DB_USERNAME admin \
+    --SECRET_DB_PASSWORD admin
