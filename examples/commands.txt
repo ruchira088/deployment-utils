@@ -3,4 +3,7 @@ yarn start \
     --name nginx \
     --dockerImage nginx \
     --containerPort 80 \
-    --host nginx.ruchij.com
+    --host nginx.ruchij.com \
+    --ENV_APPLICATION_MODE development \
+    --SECRET_DB_USERNAME admin \
+    --SECRET_DB_PASSWORD admin
