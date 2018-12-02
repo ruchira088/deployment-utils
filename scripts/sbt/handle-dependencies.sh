@@ -48,7 +48,6 @@ uploadDependencies() {
         echo "Packaging dependencies into $packagedFileName"
 
         tar -C $HOME -czf "$HOME/$packagedFileName" .sbt .ivy2
-#        tar -C $HOME -czf "$HOME/$packagedFileName" .temp-dep
 
         echo "Packaging COMPLETED"
 

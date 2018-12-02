@@ -4,14 +4,25 @@ podTemplate(
     label: podLabel,
     containers: [
         containerTemplate(
+            name: "docker",
+            image: "docker",
+            ttyEnabled: true
+        ),
+        containerTemplate(
             name: "nodejs",
             ttyEnabled: true,
             image: "node",
         ),
         containerTemplate(
             name: "ubuntu",
-            ttyEnabled: true,
-            image: "ubuntu"
+            image: "ubuntu",
+            ttyEnabled: true
+        )
+    ],
+    volumes: [
+        hostPathVolume(
+            hostPath: "/var/run/docker.sock",
+            mountPath: "/var/run/docker.sock"
         )
     ]
 ) {
@@ -21,32 +32,74 @@ podTemplate(
             checkout scm
         }
 
-        stage("Running tests with coverage") {
-
-            container("nodejs") {
-
+        stage("Apply Terraform") {
+            container("ubuntu") {
                 sh """
-                    yarn install && \
-                    npm run testWithCoverage
+                    apt-get update && apt-get install wget unzip jq -y
+
+                    mkdir Software && \
+                    wget -P Software https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && \
+                    unzip -d Software Software/terraform_0.11.7_linux_amd64.zip && rm -rf Software/*.zip
+
+                    PROJECT_ROOT=`pwd`
+                    cd dev-ops/terraform
+
+                    sed -i "s/BACKEND_KEY/`echo $JOB_NAME | tr / -`/g" resources.tf
+
+                    terraform=\$PROJECT_ROOT/Software/terraform
+
+                    \$terraform init
+                    \$terraform apply -auto-approve \
+                        -var docker_repository_name=$JOB_NAME
+
+                    \$terraform show
+                    DOCKER_REPOSITORY_URL=`\$terraform output -json | jq .dockerRepositoryUrl.value`
+
+                    echo \$DOCKER_REPOSITORY_URL >> docker-repository-url.txt
+
+                    cd \$PROJECT_ROOT
                 """
             }
         }
 
-        stage("Uploading test results") {
+        stage("Running tests (with coverage ?)") {
 
-            container("ubuntu") {
-
+            container("nodejs") {
                 sh """
-                    apt update && apt upgrade -y
+                    yarn install && \
+                    npm test
+                """
+            }
+        }
 
-                    apt install python-pip python-dev build-essential -y && \
+        stage("Build Docker image") {
+
+            container("docker") {
+                sh """
+                    apk -v --update add python py-pip git && \
                     pip install awscli --upgrade --user && \
                     ln -sf $HOME/.local/bin/aws /usr/local/bin
 
-                    artifact_path="s3://jenkins-artifacts.ruchij.com/$JOB_NAME/Build-$BUILD_ID"
+                    aws ecr get-login --no-include-email --region ap-southeast-2 | sh
 
-                    aws s3 cp --recursive mochawesome-report \$artifact_path/test-report
-                    aws s3 cp --recursive coverage \$artifact_path/coverage-report
+                    DOCKER_REPOSITORY_URL=`cat dev-ops/terraform/docker-repository-url.txt`
+                    GIT_COMMIT=`git rev-parse HEAD | cut -c1-8`
+
+                    echo "DOCKER_REPOSITORY_URL = \$DOCKER_REPOSITORY_URL"
+
+                    DOCKER_IMAGE_TAG=$JOB_NAME-$BUILD_NUMBER
+                    docker build -t \$DOCKER_IMAGE_TAG .
+
+                    docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
+                    docker push `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:build-number-$BUILD_NUMBER
+
+                    docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:\$GIT_COMMIT
+                    docker push `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:\$GIT_COMMIT
+
+                    docker tag \$DOCKER_IMAGE_TAG:latest `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:latest
+                    docker push `echo \$DOCKER_REPOSITORY_URL | tr -d '"'`:latest
+
+                    docker images
                 """
             }
         }
