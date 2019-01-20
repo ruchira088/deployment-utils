@@ -1,11 +1,11 @@
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: {{ name }}-certificate
+  name: {{ name }}-tls-certificate
 spec:
   secretName: {{ tlsSecretName }}
   issuerRef:
-    name: letsencrypt
+    name: lets-encrypt
   dnsNames:
     - {{ host }}
   acme:
