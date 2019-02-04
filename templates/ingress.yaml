@@ -4,6 +4,7 @@ metadata:
   name: {{ name }}-ingress
   annotations:
     ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx # In GKE to indicate to use the nginx Ingress controller rather than GCP Ingress controller
 spec:
   tls:
     - secretName: {{ tlsSecretName }}
