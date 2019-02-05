@@ -26,3 +26,7 @@ helm install \
   --namespace cert-manager \
   --version v0.6.0 \
   stable/cert-manager
+
+aws s3 cp s3://cert-manager.ruchij.com/cert-manager-secrets.yaml . ; kubectl apply -f cert-manager-secrets.yaml; rm cert-manager-secrets.yaml
+
+aws s3 cp s3://cert-manager.ruchij.com/cluster-issuer.yaml . ; kubectl apply -f cluster-issuer.yaml; rm cluster-issuer.yaml
