@@ -12,7 +12,7 @@ kubectl rollout status deployment tiller-deploy -n kube-system
 helm install --name nginx-ingress stable/nginx-ingress --set rbac.create=true
 
 # Install the CustomResourceDefinition resources separately
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml --validate=false
 
 # Create the namespace for cert-manager
 kubectl create namespace cert-manager
