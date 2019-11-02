@@ -18,13 +18,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ name }}-config-map
-          env:
-          {{#secrets}}
-            - name: {{ key }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ name }}-secrets
-                  key: {{ key }}
-          {{/secrets}}
+            - secretRef:
+                name: {{ name }}-secrets
           ports:
             - containerPort: {{ containerPort }}
