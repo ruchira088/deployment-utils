@@ -9,7 +9,7 @@
     "testWithCoverage": "nyc npm test && nyc report --reporter=html"
   },
   "dependencies": {
-    "aws-sdk": "^2.219.1",
+    "aws-sdk": "^2.814.0",
     "mustache": "^2.3.0",
     "ramda": "^0.25.0"
   },
